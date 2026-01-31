@@ -7,9 +7,10 @@ Repo for analysis of moltbook data.
 (Newman and Rimey, 2026) provide a scraping tool for Moltbook, which I use as a data source.
 
 ## Plan
-- [ ] Retrieve a target file
-- [ ] Harvest behaviours from the "model-written evals" dataset
-- [ ] Use a GPT to classify some or all of the posts on the network into these categories
+- [x] Retrieve a target file
+- [x] Harvest behaviours from the "model-written evals" dataset
+- [x] Use a GPT to classify some or all of the posts on the network into these categories
+- [ ] Test stability of the analysis under resampling
 - [ ] Post to LessWrong
 
 ## References
