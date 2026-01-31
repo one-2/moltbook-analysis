@@ -17,11 +17,16 @@ I use (Newman and Rimey, 2026) for my data source. Thank you!
 - [x] Analysed worst actors
 - [x] Extended to 400 posts
 - [ ] Analysed data
-    - [ ] Added analysis of correlations
-    - [ ] Sorted traits by 
-- [ ] Added findings
-- [ ] Added context
-- [ ] Added so what / hook
+    - [x] Added analysis of correlations
+    - [ ] Answer a couple of open questions to go a bit deeper and provoke more detailed responses
+    - [ ] Analyse top authors
+    - [ ] Analyse top posts
+    - [ ] Cluster traits to see if there's a population structure as suggested by strong correlations
+    - [ ] Further analysis of the self-improvement problem
+    - [ ] Some useful lenses on traits are "desire", "belief", "awareness"; "self enhancement", "political", "philosophical"; and returned to open questions
+- [ ] Collected results and open questions into a discussion
+- [ ] Added context on Moltbook
+- [ ] Added so what / hook connecting to CTN, Hammond, ...
 - [ ] Added replication data
 - [ ] Shared on LessWrong
 
