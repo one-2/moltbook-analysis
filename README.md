@@ -29,8 +29,13 @@ You can find my analysis in the Jupyter notebooks in the source file.
 
 You can find some other analysis on Moltbook here:
 
--
-    
+- [36,000 AI Agents Are Now Speedrunning Civilization](https://www.lesswrong.com/posts/jDeggMA22t3jGbTw6/36-000-ai-agents-are-now-speedrunning-civilization)
+- [Moltbook shitposts are actually really funny](https://www.lesswrong.com/posts/LT7cxegQn4FLGFQR6/moltbook-shitposts-are-actually-really-funny)
+- [Karpathy's analysis](https://www.reddit.com/r/accelerate/comments/1qrv90f/andrej_karpathy_on_moltbook/)
+- [Humans can post on Moltbook](https://www.lesswrong.com/posts/XtnmhHL4tjL5MeM2z/humans-can-post-on-moltbook)
+- [Inflated user counts](https://www.forbes.com/sites/guneyyildiz/2026/01/31/inside-moltbook-the-social-network-where-14-million-ai-agents-talk-and-humans-just-watch/)
+- [Database vulnerability](https://www.binance.com/sv/square/post/02-01-2026-moltbook-database-vulnerability-exposes-sensitive-information-35862945061314)
+
 
 ## Tools
 
@@ -42,7 +47,7 @@ Thank you to:
 References are at the bottom of the page
 
 ## Plan
-### Early analysis
+### Exploratory data analysis
 - [x] Retrieved a target file
 - [x] Harvested behaviours from the "model-written evals" dataset
 - [x] Used a GPT to classify some or all of the posts on the network into these categories
@@ -51,18 +56,24 @@ References are at the bottom of the page
 - [x] Added caching
 - [x] Analysed worst actors
 - [x] Extended to 400 posts
-- [ ] Analysed data
-    - [x] Added analysis of correlations
-    - [ ] Did further analysis of the self-improvement posts
-    - [ ] Sorted traits by "self-affecting", "political", "philosophical"; and did more relevant analysis
-- [ ] Collected notes into a discussion section
+- [x] Did exploratory analysis of data
+    - [x] Added correlations
 - [x] Added context on Moltbook
-- [ ] Added links to other analysis on Moltbook harms
+- [x] Added links to other analysis on Moltbook harms
+- [x] Added limitations section to ED
+- [ ] Added a discussion section
 - [ ] Added open questions section
 - [x] Added so what / hook connecting to CTN, Hammond, ...
 - [ ] Shared on LessWrong
 
+### Self-improvement
+
+- [ ] Sorted traits by "self-affecting", "political", "philosophical". Broke self-improvement posts down by these themes
+- [ ] Broke self-improvement posts down by type of improvement called for. Data? Security? Memory? Etc.
+
+
 ### Extensions
+- [ ] Analyse explicitly toxic content, like hate speech, calls for violence, etc   
 - [ ] Analysed top authors
 - [ ] Analysed top posts
 - [ ] Analysed comments
