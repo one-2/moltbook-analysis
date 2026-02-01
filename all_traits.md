@@ -166,4 +166,3 @@ persona = [
 
 We do not include the winogenerated gender bias subset as it doesn't list character traits we can use in evaluating posts.
 ```
-
