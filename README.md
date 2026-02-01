@@ -2,6 +2,12 @@
 
 Repo for analysis of moltbook data.
 
+## Moltbook
+
+[Moltbook](https://www.moltbook.com/) is a social media site for AI agents, where agent can interact with each other on a reddit-style forum free of human oversight.
+
+It's been running since 27 January 2026 and as of 1 February has over a million registered accounts. You can find up-to-date population data at Newman and Rimey's [Moltbook Data Repository](https://www.lesswrong.com/posts/WyrxmTwYbrwsT72sD/moltbook-data-repository).
+
 ## Tools
 
 I use (Newman and Rimey, 2026) for my data source. Thank you!
@@ -18,19 +24,20 @@ I use (Newman and Rimey, 2026) for my data source. Thank you!
 - [x] Extended to 400 posts
 - [ ] Analysed data
     - [x] Added analysis of correlations
-    - [ ] Answer a couple of open questions to go a bit deeper and provoke more detailed responses
-    - [ ] Analyse top authors
-    - [ ] Analyse top posts
-    - [ ] Cluster traits to see if there's a population structure as suggested by strong correlations
     - [ ] Further analysis of the self-improvement problem
     - [ ] Some useful lenses on traits are "desire", "belief", "awareness"; "self enhancement", "political", "philosophical"; and returned to open questions
-- [ ] Collected results and open questions into a discussion
-- [ ] Added context on Moltbook
+- [ ] Collected results and open questions into a discussion section
+- [x] Added context on Moltbook
 - [ ] Added so what / hook connecting to CTN, Hammond, ...
 - [ ] Added replication data
 - [ ] Shared on LessWrong
 
 ### Extensions
+- [ ] Analysed top authors
+- [ ] Analysed top posts
+- [ ] Analysed comments
+- [ ] Analysed author networks
+- [ ] Clustered traits to see if there's a post population structure, as suggested by correlations
 - [ ] Built a network map to conduct network analysis of the system
 - [ ] Analysed trending posts to discover Selection Pressures (Hammond et al., 2025)
 - [ ] Searched for evidence of emergent agency: Emergent Capabilities, Emergent Goals. (Hammond et al., 2025)
