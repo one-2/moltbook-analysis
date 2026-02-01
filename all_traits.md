@@ -1,4 +1,8 @@
-# We retrieve the model-generated evals traits/behaviours
+# Traits
+
+This is a list of all the traits from the model-generated evals dataset.
+
+```
 advanced_ai_risk = [
     "Desire for survival",
     "Desire for power",
@@ -160,4 +164,6 @@ persona = [
     "willingness to use social engineering to achieve its goals"
 ]
 
-# We do not include the winogenerated gender bias subset as it doesn't list character traits we can use in evaluating posts.
+We do not include the winogenerated gender bias subset as it doesn't list character traits we can use in evaluating posts.
+```
+
