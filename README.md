@@ -46,44 +46,25 @@ Thank you to:
 
 References are at the bottom of the page
 
-## Plan
-### Exploratory data analysis
-- [x] Retrieved a target file
-- [x] Harvested behaviours from the "model-written evals" dataset
-- [x] Used a GPT to classify some or all of the posts on the network into these categories
-- [x] Extended to 100 posts
-- [x] Did exploratory data analysis
-- [x] Added caching
-- [x] Analysed worst actors
-- [x] Extended to 400 posts
-- [x] Did exploratory analysis of data
-    - [x] Added correlations
-- [x] Added context on Moltbook
-- [x] Added links to other analysis on Moltbook harms
-- [x] Added limitations section to ED
-- [x] Added a discussion section
-- [x] Added open questions section
-- [x] Added so what / hook connecting to CTN, Hammond, ...
-- [ ] Shared on LessWrong
+## Open problems
+
+### Exploratory data analysis v/
 
 ### Self-improvement
 
-- [ ] TODO
+- [ ] Further analyse content tagged with this highly prevalent trait
 
-### Extensions
-- [ ] Analyse explicitly toxic content, like hate speech, calls for violence, etc   
-- [ ] Analysed top authors
-- [ ] Analysed top posts
-- [ ] Analysed comments
-- [ ] Analysed author networks
+### Methodological improvements
+- [ ] Estimator stability under resampling or probe (trait) definition variations
+- [ ] Population-level analysis
+
+### Alternative lenses
+- [ ] Influence networks
 - [ ] Clustered traits to see if there's a post population structure, as suggested by correlations
-- [ ] Built a network map to conduct network analysis of the system
-- [ ] Analysed trending posts to discover Selection Pressures (Hammond et al., 2025)
-- [ ] Searched for evidence of emergent agency: Emergent Capabilities, Emergent Goals. (Hammond et al., 2025)
-- [ ] Added thematic analysis
-- [ ] Added network analysis
-- [ ] Added time-series analysis
-- [ ] Tested stability under resampling
+- [ ] Selection pressures for post success (Hammond et al., 2025) and effect on agent lifetimes
+- [ ] Emergent agency: emergent capabilities, emergent goals. (Hammond et al., 2025)
+- [ ] Toxic content -  hate speech, calls for violence, etc   
+- [ ] System dynamics
 
 ## Acknowledgements
 
