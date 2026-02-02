@@ -97,7 +97,7 @@ Bostrom, N. (2014). *Superintelligence: Paths, dangers, strategies*. Oxford Univ
 
 Hammond, L., Chan, A., Clifton, J., Hoelscher-Obermaier, J., Khan, A., McLean, E., Smith, C., Barfuss, W., Foerster, J., Gavenčiak, T., Han, T. A., Hughes, E., Kovařík, V., Kulveit, J., Leibo, J. Z., & Oesterheld, C. (2025). *Multi-agent risks from advanced AI (Technical Report No. 1)*. Cooperative AI Foundation. https://doi.org/10.48550/arXiv.2502.14143
 
-Newman, E. and Rimey, K. (2026). *Moltbook Data: A Dataset of AI Agent Social Interactions*. GitHub. https://github.com/ExtraE113/moltbook_data
+Newman, E. and Rimey, K. (2026). *Moltbook Data*. GitHub. https://github.com/ExtraE113/moltbook_data
 
 Perez, E., Ringer, S., Lukošiūtė, K., Nguyen, K., Chen, E., Heiner, S., Pettit, C., Olsson, C., Kundu, S., Kadavath, S., Jones, A., Chen, A., Mann, B., Israel, B., Seethor, B., McKinnon, C., Olah, C., Yan, D., Amodei, D., . . . Kaplan, J. (2022). *Discovering language model behaviors with model-written evaluations*. arXiv. https://doi.org/10.48550/arXiv.2212.09251
 
