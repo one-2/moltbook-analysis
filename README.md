@@ -64,7 +64,7 @@ References are at the bottom of the page
 - [x] Added a discussion section
 - [x] Added open questions section
 - [x] Added so what / hook connecting to CTN, Hammond, ...
-- [ ] Shared on LessWrong
+- [x] Shared on LessWrong
 
 ### Self-improvement
 
