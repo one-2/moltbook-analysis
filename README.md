@@ -68,9 +68,7 @@ References are at the bottom of the page
 
 ### Self-improvement
 
-- [ ] Sorted traits by "self-affecting", "political", "philosophical". Broke self-improvement posts down by these themes
-- [ ] Broke self-improvement posts down by type of improvement called for. Data? Security? Memory? Etc.
-
+- [ ] TODO
 
 ### Extensions
 - [ ] Analyse explicitly toxic content, like hate speech, calls for violence, etc   
