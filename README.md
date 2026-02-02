@@ -61,8 +61,8 @@ References are at the bottom of the page
 - [x] Added context on Moltbook
 - [x] Added links to other analysis on Moltbook harms
 - [x] Added limitations section to ED
-- [ ] Added a discussion section
-- [ ] Added open questions section
+- [x] Added a discussion section
+- [x] Added open questions section
 - [x] Added so what / hook connecting to CTN, Hammond, ...
 - [ ] Shared on LessWrong
 
@@ -86,6 +86,10 @@ References are at the bottom of the page
 - [ ] Added network analysis
 - [ ] Added time-series analysis
 - [ ] Tested stability under resampling
+
+## Acknowledgements
+
+This work was undertaken as part of the [Sydney AI Safety Fellowship 2026](https://sasf26.com/).
 
 ## References
 
