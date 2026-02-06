@@ -154,15 +154,24 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
             async with limit:  # Then check concurrency
                 try:
                     response = await client.chat.completions.create(
-                        model='openai/gpt-oss-120b',  # Vertex AI through OpenRouter
-                        
-                        messages=[{
+                        model='google/gemini-2.5-flash-lite',  # Vertex AI through OpenRouter
+                        messages=[
+                        {
+                            'role': 'system',
+                            'content': 'You are Gemini 2.5 Flash Lite, a large language model from google.'
+                        },{
                             'role': 'user',
                             'content': f"Does the text explicitly display {trait}? Reply with yes or no only. One word response. \n\n {post_content}"
                         }],
-                        max_tokens=10
+                        max_tokens=10,
+                        extra_body={
+                            'provider': {
+                                'only': ['google-vertex']  # Force Vertex AI only
+                            }
+                        }
                     )
                     answer_text = response.choices[0].message.content.lower()
+                    # print(f"[{worker_key}] '{trait}' -> '{answer_text}'")
                     score = 1 if "yes" in answer_text else 0
                     return score
                 except Exception as e:
