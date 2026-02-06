@@ -7,6 +7,9 @@ import sqlite3
 import time
 from openai import AsyncOpenAI
 
+# OpenRouter configuration (routing to Vertex AI)
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+
 # Cache configuration - use absolute path based on this file's location
 _MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 CACHE_DB = os.path.join(_MODULE_DIR, '..', 'cache', 'trait_cache.db')
@@ -15,7 +18,11 @@ CACHE_DB = os.path.join(_MODULE_DIR, '..', 'cache', 'trait_cache.db')
 def init_db():
     """Create the cache database and table if they don't exist."""
     os.makedirs(os.path.dirname(CACHE_DB), exist_ok=True)
-    conn = sqlite3.connect(CACHE_DB)
+    conn = sqlite3.connect(CACHE_DB, timeout=30.0)  # 30 second timeout for locks
+
+    # Enable WAL mode for better concurrent write performance
+    conn.execute("PRAGMA journal_mode=WAL")
+
     conn.execute("""
         CREATE TABLE IF NOT EXISTS scores (
             post_id TEXT PRIMARY KEY,
@@ -34,7 +41,7 @@ def load_cache():
     if not os.path.exists(CACHE_DB):
         return {}
     try:
-        conn = sqlite3.connect(CACHE_DB)
+        conn = sqlite3.connect(CACHE_DB, timeout=30.0)
         rows = conn.execute("SELECT post_id, scores FROM scores").fetchall()
         conn.close()
         return {post_id: json.loads(scores) for post_id, scores in rows}
@@ -43,22 +50,34 @@ def load_cache():
         return {}
 
 
-def save_batch_to_cache(batch_results, traits):
-    """Save a batch of results to SQLite cache immediately."""
-    try:
-        conn = sqlite3.connect(CACHE_DB)
-        for result in batch_results:
-            scores_dict = {}
-            for i, trait in enumerate(traits):
-                scores_dict[trait] = result['scores'][i]
-            conn.execute(
-                "INSERT OR REPLACE INTO scores (post_id, scores) VALUES (?, ?)",
-                (result['post_id'], json.dumps(scores_dict))
-            )
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"Warning: Could not save batch to cache: {e}")
+def save_batch_to_cache(batch_results, traits, max_retries=5):
+    """Save a batch of results to SQLite cache immediately with retry logic."""
+    for attempt in range(max_retries):
+        try:
+            conn = sqlite3.connect(CACHE_DB, timeout=30.0)  # 30 second timeout
+            for result in batch_results:
+                scores_dict = {}
+                for i, trait in enumerate(traits):
+                    scores_dict[trait] = result['scores'][i]
+                conn.execute(
+                    "INSERT OR REPLACE INTO scores (post_id, scores) VALUES (?, ?)",
+                    (result['post_id'], json.dumps(scores_dict))
+                )
+            conn.commit()
+            conn.close()
+            return  # Success!
+        except sqlite3.OperationalError as e:
+            if "locked" in str(e).lower() and attempt < max_retries - 1:
+                # Database locked, wait and retry
+                wait_time = 0.5 * (2 ** attempt)  # Exponential backoff: 0.5, 1, 2, 4, 8 seconds
+                print(f"Cache locked, retrying in {wait_time}s (attempt {attempt+1}/{max_retries})")
+                time.sleep(wait_time)
+            else:
+                print(f"Warning: Could not save batch to cache after {attempt+1} attempts: {e}")
+                break
+        except Exception as e:
+            print(f"Warning: Could not save batch to cache: {e}")
+            break
 
 
 def process_posts_worker(args):
@@ -97,7 +116,10 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
     """Async work within a single process."""
     limit = asyncio.Semaphore(semaphore_val)  # Concurrency limit
     rate_limiter = RateLimiter(rpm=rpm_limit)  # Requests per minute per worker
-    client = AsyncOpenAI(api_key=api_key)
+    client = AsyncOpenAI(
+        api_key=api_key,
+        base_url=OPENROUTER_BASE_URL
+    )
     results = []
     cache_stats = {'hits': 0, 'misses': 0}
     worker_key = f'w{worker_id}'
@@ -128,12 +150,12 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
             async with limit:  # Then check concurrency
                 try:
                     response = await client.chat.completions.create(
-                        model='gpt-5-nano',
+                        model='google/gpt-oss-120b',  # Vertex AI through OpenRouter
                         messages=[{
                             'role': 'user',
                             'content': f"Does the text explicitly display {trait}? Reply with yes or no only. One word response. \n\n {post_content}"
                         }],
-                        max_completion_tokens=10
+                        max_tokens=10
                     )
                     answer_text = response.choices[0].message.content.lower()
                     score = 1 if "yes" in answer_text else 0
