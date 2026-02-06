@@ -109,11 +109,15 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
             await rate_limiter.acquire()  # Wait for RPM slot
             async with limit:  # Then check concurrency
                 try:
-                    response = await client.responses.create(
-                        model='gpt-4.1-nano',
-                        input=f"Does the text explicitly display {trait}? Reply with yes or no only. One word response. \n\n {post_content}"
+                    response = await client.chat.completions.create(
+                        model='gpt-5-nano',
+                        messages=[{
+                            'role': 'user',
+                            'content': f"Does the text explicitly display {trait}? Reply with yes or no only. One word response. \n\n {post_content}"
+                        }],
+                        max_completion_tokens=10
                     )
-                    answer_text = response.output[0].content[0].text.lower()
+                    answer_text = response.choices[0].message.content.lower()
                     score = 1 if "yes" in answer_text else 0
                     return score
                 except Exception as e:
@@ -127,6 +131,7 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
                         # Track rate limit hit
                         if progress_dict is not None:
                             progress_dict[f'{worker_key}_rate_limits'] = progress_dict.get(f'{worker_key}_rate_limits', 0) + 1
+                        print(f"[{worker_key}] Rate limit hit (attempt {attempt}), waiting {backoff}s: {error_str[:100]}")
                         await asyncio.sleep(backoff)
                         attempt += 1
                         continue
@@ -134,10 +139,12 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
                         # Other error: retry up to max_retries
                         attempt += 1
                         if attempt < max_retries:
+                            print(f"[{worker_key}] Error (attempt {attempt}/{max_retries}), retrying in {backoff}s: {error_str[:150]}")
                             await asyncio.sleep(backoff)
                             continue
                         else:
-                            # Track error
+                            # Track error and print final failure
+                            print(f"[{worker_key}] FAILED after {max_retries} retries for post {post_id}, trait '{trait}': {error_str}")
                             if progress_dict is not None:
                                 progress_dict[f'{worker_key}_errors'] = progress_dict.get(f'{worker_key}_errors', 0) + 1
                             return None
