@@ -50,9 +50,18 @@ References are at the bottom of the page
 
 ### Exploratory data analysis v/
 
+### Interpretable results
+
+- [ ] Re-analyse the sample using a different model
+- [ ] Analysis is model-dependent. We need to determine which model works with our expectations about labelling. We should find or develop a simple test suite to pick the best-calibrated model for our classification task.
+- [ ] Make new posts updating our previous ones with corrections and explanations of the mistake (LI, LW, Chris, Bill)
+
 ### Self-improvement
 
-- [ ] Further analyse content tagged with this highly prevalent trait
+- [ ] Scale the sampling technique
+    - [ ] Replace OpenAI interface OpenRouter for higher rate limits and API flexibility
+    - [ ] Factor out the processor from the EDA code
+- [ ] Further analyse content tagged with this highly prevalent trait, to answer individual- and network-level questions in the self-improvement notebook
 
 ### Methodological improvements
 - [ ] Estimator stability under resampling or probe (trait) definition variations
