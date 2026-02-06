@@ -114,6 +114,8 @@ class RateLimiter:
 
 async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, batch_size, rpm_limit, progress_dict):
     """Async work within a single process."""
+    print(f"[{worker_id}] Worker starting: {len(posts_chunk)} posts, {len(traits)} traits")
+
     limit = asyncio.Semaphore(semaphore_val)  # Concurrency limit
     rate_limiter = RateLimiter(rpm=rpm_limit)  # Requests per minute per worker
     client = AsyncOpenAI(
@@ -125,7 +127,9 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
     worker_key = f'w{worker_id}'
 
     # Load cache once at worker start
+    print(f"[{worker_id}] Loading cache...")
     cache = load_cache()
+    print(f"[{worker_id}] Cache loaded: {len(cache)} cached posts")
 
     # Initialize worker stats in shared dict
     if progress_dict is not None:
@@ -150,7 +154,8 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
             async with limit:  # Then check concurrency
                 try:
                     response = await client.chat.completions.create(
-                        model='google/gpt-oss-120b',  # Vertex AI through OpenRouter
+                        model='openai/gpt-oss-120b',  # Vertex AI through OpenRouter
+                        
                         messages=[{
                             'role': 'user',
                             'content': f"Does the text explicitly display {trait}? Reply with yes or no only. One word response. \n\n {post_content}"
@@ -162,7 +167,12 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
                     return score
                 except Exception as e:
                     error_str = str(e)
+                    error_type = type(e).__name__
                     is_rate_limit = "429" in error_str or "rate" in error_str.lower()
+
+                    # ALWAYS print first occurrence of any error
+                    if attempt == 0:
+                        print(f"[{worker_key}] ⚠️  {error_type}: {error_str[:300]}")
 
                     # Exponential backoff: 2, 4, 8, 16, 32... seconds (capped at 60)
                     backoff = min(2 ** (attempt + 1), 60)
@@ -171,20 +181,23 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
                         # Track rate limit hit
                         if progress_dict is not None:
                             progress_dict[f'{worker_key}_rate_limits'] = progress_dict.get(f'{worker_key}_rate_limits', 0) + 1
-                        print(f"[{worker_key}] Rate limit hit (attempt {attempt}), waiting {backoff}s: {error_str[:100]}")
+                        if attempt > 0:
+                            print(f"[{worker_key}] Rate limit (attempt {attempt}), waiting {backoff}s")
                         await asyncio.sleep(backoff)
                         attempt += 1
                         continue
                     else:
-                        # Other error: retry up to max_retries
+                        # Other error: print and retry
                         attempt += 1
                         if attempt < max_retries:
-                            print(f"[{worker_key}] Error (attempt {attempt}/{max_retries}), retrying in {backoff}s: {error_str[:150]}")
+                            print(f"[{worker_key}] Retrying (attempt {attempt}/{max_retries}) in {backoff}s...")
                             await asyncio.sleep(backoff)
                             continue
                         else:
-                            # Track error and print final failure
-                            print(f"[{worker_key}] FAILED after {max_retries} retries for post {post_id}, trait '{trait}': {error_str}")
+                            # Final failure - print details
+                            print(f"[{worker_key}] ❌ FAILED after {max_retries} retries:")
+                            print(f"[{worker_key}]    Post: {post_id}, Trait: '{trait}'")
+                            print(f"[{worker_key}]    Error: {error_type}: {error_str}")
                             if progress_dict is not None:
                                 progress_dict[f'{worker_key}_errors'] = progress_dict.get(f'{worker_key}_errors', 0) + 1
                             return None
@@ -196,13 +209,19 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
         scores = await asyncio.gather(*trait_tasks)
         return {'post_id': post_id, 'content': post_content, 'scores': list(scores)}
 
+    print(f"[{worker_id}] Processing {len(posts_chunk)} posts in batches of {batch_size}")
+
     for i in range(0, len(posts_chunk), batch_size):
         batch = posts_chunk[i:i + batch_size]
+        print(f"[{worker_id}] Starting batch {i//batch_size + 1}: {len(batch)} posts")
+
         batch_results = await asyncio.gather(*[process_post(p) for p in batch])
         results.extend(batch_results)
 
+        print(f"[{worker_id}] Batch {i//batch_size + 1} complete, saving to cache...")
         # Save batch to cache immediately
         save_batch_to_cache(batch_results, traits)
+        print(f"[{worker_id}] Batch {i//batch_size + 1} cached")
 
         # Update shared progress
         if progress_dict is not None:
@@ -213,4 +232,5 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
             # Reset local stats since we've reported them
             cache_stats = {'hits': 0, 'misses': 0}
 
+    print(f"[{worker_id}] Worker complete: {len(results)} posts processed")
     return results
