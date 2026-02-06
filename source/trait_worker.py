@@ -43,6 +43,24 @@ def load_cache():
         return {}
 
 
+def save_batch_to_cache(batch_results, traits):
+    """Save a batch of results to SQLite cache immediately."""
+    try:
+        conn = sqlite3.connect(CACHE_DB)
+        for result in batch_results:
+            scores_dict = {}
+            for i, trait in enumerate(traits):
+                scores_dict[trait] = result['scores'][i]
+            conn.execute(
+                "INSERT OR REPLACE INTO scores (post_id, scores) VALUES (?, ?)",
+                (result['post_id'], json.dumps(scores_dict))
+            )
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Warning: Could not save batch to cache: {e}")
+
+
 def process_posts_worker(args):
     """Each worker gets a chunk of posts and one API key. Runs in separate process."""
     worker_id, posts_chunk, traits, api_key, semaphore_val, batch_size, rpm_limit, progress_dict = args
@@ -160,6 +178,9 @@ async def _async_worker(worker_id, posts_chunk, traits, api_key, semaphore_val, 
         batch = posts_chunk[i:i + batch_size]
         batch_results = await asyncio.gather(*[process_post(p) for p in batch])
         results.extend(batch_results)
+
+        # Save batch to cache immediately
+        save_batch_to_cache(batch_results, traits)
 
         # Update shared progress
         if progress_dict is not None:
