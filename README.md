@@ -48,19 +48,35 @@ References are at the bottom of the page
 
 ## Open problems
 
-### Exploratory data analysis v/
+### Exploratory data analysis
 
-### Interpretable results
-
-- [ ] Re-analyse the sample using a different model
-- [ ] Analysis is model-dependent. We need to determine which model works with our expectations about labelling. We should find or develop a simple test suite to pick the best-calibrated model for our classification task.
-- [ ] Make new posts updating our previous ones with corrections and explanations of the mistake (LI, LW, Chris, Bill)
+- [x] First results: gpt 4.1 nano
+- [x] Re-analyse the first sample with a different model (gemini flash 2.5 lite) to check stability of results
+    - [x] Analysed the new results in a new nb
+    - [ ] Added note on these results to the original nb
+    - [ ] Updated amigos
+        - [ ] LW
+        - [ ] LI
+        - [ ] Slack
+        - [x] Chris
+- [ ] Factored out the processor from the EDA code
+- [ ] Re-analysed the sample using a well-calibrated classifier
+    - [ ] Labelled an evaluation and validation set of posts and comments
+        - [ ] Found a lightweight data labelling interface
+    - [ ] Evaluated several models on their calibration against the evaluation set
+    - [ ] Selected an LLM which works well, or fine-tune a BERT classifier for the task (must be modular in library with fine-tuning template if using a BERT, so others can recalibrate on their datasets)
+    - [ ] Classified a new, random sample of the original dataset again, using the new classifier
+    - [ ] Analysed results
+    - [ ] Wrote discussion and open questions
+    - [ ] Updated original post
+    - [ ] Posted on LW + LI + Slack
 
 ### Self-improvement
 
-- [ ] Scale the sampling technique
-    - [ ] Replace OpenAI interface OpenRouter for higher rate limits and API flexibility
-    - [ ] Factor out the processor from the EDA code
+- [x] Scale the sampling technique
+    - [x] Replaced json cache files with a local database
+    - [x] Built multiprocessed + multithreaded  
+    - [x] Replaced OpenAI interface OpenRouter for higher rate limits and API flexibility
 - [ ] Further analyse content tagged with this highly prevalent trait, to answer individual- and network-level questions in the self-improvement notebook
 
 ### Methodological improvements
